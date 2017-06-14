@@ -9,3 +9,5 @@ installer_dir: "{{ unarchive_dir }}/Installations/QueryReportingAnalysis_Linux"
 microstrategy_home_dir: /opt/MicroStrategy
 microstrategy_install_dir: "{{ microstrategy_home_dir }}/install"
 microstrategy_log_dir: "{{ microstrategy_home_dir }}/log"
+
+db_port: 3306
