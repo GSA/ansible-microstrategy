@@ -1,2 +1,109 @@
 ---
-# tasks file for gsa.microstrategy
+- name: Install Ansible dependencies
+  yum:
+    name:
+      - mysql
+      - rsync
+
+# http://serverfault.com/a/703178/137197
+- name: Enable extra yum repositories, needed for compat-libstdc++-33
+  command: yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
+
+- name: Install MicroStrategy dependencies
+  yum:
+    name:
+      - compat-libstdc++-33
+      - elfutils-devel
+      - elfutils-libelf-devel
+      - krb5-libs
+      - ksh
+      - libstdc++
+      - libXp
+      # default repository only has 5.2
+      - https://dev.mysql.com/get/Downloads/Connector-ODBC/5.3/mysql-connector-odbc-5.3.7-1.el7.x86_64.rpm
+      - nss-pam-ldapd
+      - unixODBC
+
+- name: Set Kernel Parameters
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+    reload: yes
+  with_items:
+    - name: vm.max_map_count
+      value: '5242880'
+    - name: kernel.shmmni
+      value: '2048'
+    - name: kernel.sem
+      value: '250 32000 32 2048'
+
+- name: Check for MySQL driver files
+  include: check_file.yml
+  with_items:
+    - /usr/lib64/libmyodbc5a.so
+    - /usr/lib64/libmyodbc5w.so
+
+- name: Upload installer
+  synchronize:
+    src: "{{ tar_source }}"
+    dest: "{{ tar_dest }}"
+
+- name: Get file information about the installer
+  stat:
+    path: "{{ tar_dest }}"
+    checksum_algorithm: sha256
+  register: p
+- name: Verify the installer checksum
+  fail:
+    msg: Checksum of MicroStrategy installer isn't correct
+  when: p.stat.checksum != tar_sha256
+
+- name: Create temp install dir
+  file:
+    path: "{{ unarchive_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Unarchive installer
+  unarchive:
+    src: "{{ tar_dest }}"
+    dest: "{{ unarchive_dir }}"
+    remote_src: yes
+    creates: "{{ unarchive_dir }}/Installations"
+
+- name: Copy options file
+  template:
+    src: options.txt
+    dest: "{{ installer_dir }}/options.txt"
+    mode: 0666
+
+- name: Create the MicroStrategy home directory
+  file:
+    path: "{{ microstrategy_home_dir }}"
+    state: directory
+
+- name: Copy ODBC configuration file
+  template:
+    src: odbc.ini
+    dest: "{{ microstrategy_home_dir }}/odbc.ini"
+
+- name: Configure Tomcat users
+  template:
+    src: tomcat-users.xml
+    dest: "{{ catalina_home }}/conf/"
+  notify: restart tomcat
+
+- block:
+    - name: Trigger silent install
+      command: ./setup.sh -silent -options options.txt
+      args:
+        chdir: "{{ installer_dir }}/"
+  rescue:
+    - name: Give instructions around manual installation
+      fail:
+        msg: |
+          MicroStrategy silent installation failed. Run manually with
+
+            cd {{ installer_dir }}
+            ./setup.sh -console -options options.txt

@@ -1,0 +1,9 @@
+---
+- name: Check for {{ item }}
+  stat:
+    path: "{{ item }}"
+  register: st
+- name: Fail if {{ item }} doesn't exist
+  fail:
+    msg: "{{ item }} not present"
+  when: st.stat.exists == False

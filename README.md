@@ -1,7 +1,12 @@
-Role Name
+Ansible Role for Microstrategy
 =========
 
 A brief description of the role goes here.
+
+See the MicroStrategy Installation and Configuration Guides for more information:
+
+* [10.4](http://www2.microstrategy.com/producthelp/10.4/manuals/en/InstallationConfig.pdf)
+* [10.5](http://www2.microstrategy.com/producthelp/10.5/manuals/en/InstallationConfig.pdf)
 
 Requirements
 ------------
@@ -30,7 +35,7 @@ Including an example of how to use your role (for instance, with variables passe
 License
 -------
 
-BSD
+CC0
 
 Author Information
 ------------------
