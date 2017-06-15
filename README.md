@@ -3,15 +3,16 @@ Ansible Role for Microstrategy
 
 A brief description of the role goes here.
 
+Requirements
+------------
+
+* Java
+* Tomcat
+
 See the MicroStrategy Installation and Configuration Guides for more information:
 
 * [10.4](http://www2.microstrategy.com/producthelp/10.4/manuals/en/InstallationConfig.pdf)
 * [10.5](http://www2.microstrategy.com/producthelp/10.5/manuals/en/InstallationConfig.pdf)
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
 
 Role Variables
 --------------

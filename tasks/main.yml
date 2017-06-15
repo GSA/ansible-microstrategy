@@ -88,12 +88,6 @@
     src: odbc.ini
     dest: "{{ microstrategy_home_dir }}/odbc.ini"
 
-- name: Configure Tomcat users
-  template:
-    src: tomcat-users.xml
-    dest: "{{ catalina_home }}/conf/"
-  notify: restart tomcat
-
 - block:
     - name: Trigger silent install
       command: ./setup.sh -silent -options options.txt

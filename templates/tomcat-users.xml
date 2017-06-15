@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<tomcat-users>
-  <role rolename="admin"/>
-  <user username="system" password="{{ tomcat_system_password }}" roles="admin"/>
-  <user username="admin" password="{{ tomcat_admin_password }}" roles="admin"/>
-</tomcat-users>
