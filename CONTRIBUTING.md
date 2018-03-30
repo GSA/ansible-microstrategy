@@ -17,3 +17,29 @@ the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/pub
 All contributions to this project will be released under the CC0
 dedication. By submitting a pull request, you are agreeing to comply
 with this waiver of copyright interest.
+
+## Development
+
+1. Install and start Docker.
+1. [Fork this repository.](https://help.github.com/articles/fork-a-repo/)
+1. Clone your fork of the repository.
+
+    ```sh
+    git clone https://github.com/<user>/ansible-microstrategy.git
+    ```
+
+1. Go into the repository directory, and make a temporary directory.
+
+    ```sh
+    cd ansible-microstrategy
+    mkdir -p tmp
+    ```
+
+1. [Download MicroStrategy](https://software.microstrategy.com/Download/index.aspx), and save as `tmp/microstrategy.tar.gz`.
+1. Run the playbook in a Docker container. This will run [the test playbook](tests/test.yml) in a Docker container to do the installation from scratch.
+
+    ```sh
+    make
+    ```
+
+1. Adjust the role, and repeat from previous step.

@@ -28,3 +28,5 @@ CC0
 ## Author Information
 
 Created by the [General Services Administration](https://www.gsa.gov/) for the [Data to Decisions](https://d2d.gsa.gov/) project.
+
+To contribute, see the [development instructions](CONTRIBUTING.md#development).
